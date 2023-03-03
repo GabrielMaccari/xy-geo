@@ -4,8 +4,10 @@ Created on Mon Sep 26 18:31:49 2022
 
 @author: Gabriel Maccari
 """
-from PyQt6.QtWidgets import QMainWindow, QApplication, QInputDialog, QPushButton, QLabel, QTableWidget, \
-    QTableWidgetItem, QComboBox, QFileDialog, QMessageBox, QFrame
+from PyQt6.QtWidgets import (QMainWindow, QApplication, QInputDialog,
+                             QPushButton, QLabel, QTableWidget,
+                             QTableWidgetItem, QComboBox, QFileDialog,
+                             QMessageBox, QFrame)
 from PyQt6.QtGui import QIcon, QFont
 from sys import argv as sys_argv
 from os import getcwd as os_getcwd
@@ -33,9 +35,11 @@ class XYConverterApp(QMainWindow):
         self.geographic_CRS_dt = {}
         self.format_options = {}
 
-        # Coleta dois dicionários de sistemas de referência de coordenadas (uma de SRCs projetados e outra de SRCs geográficos)
-        # Cada dicionário contém o nome do SRC e seu código EPSG ('SRC_name':EPSG)
-        utm_crs_data = query_crs_info(pj_types='PROJECTED_CRS')  # pyproj.database.query_crs_info()
+        # Coleta dois dicionários de sistemas de referência de coordenadas (um
+        # de SRCs projetados e outro de SRCs geográficos)
+        # Cada dicionário contém o nome do SRC e seu código EPSG
+        # ('SRC_name':EPSG)
+        utm_crs_data = query_crs_info(pj_types='PROJECTED_CRS') #pyproj
         geo_crs_data = query_crs_info(pj_types='GEOGRAPHIC_2D_CRS')
         for info in utm_crs_data:
             if info.auth_name == 'EPSG':
@@ -60,14 +64,27 @@ class XYConverterApp(QMainWindow):
 
         # Limites das coordenadas
         self.coordinate_ranges = {
-            'Projetado (UTM)': {'y_max': 10000000, 'y_min': 1099000, 'x_max': 835000, 'x_min': 165000},
-            'Geográfico (GD)': {'y_max': 90, 'y_min': -90, 'x_max': 180, 'x_min': -180},
-            'Geográfico (GMS)': {'y_max': None, 'y_min': None, 'x_max': None, 'x_min': None}
+            'Projetado (UTM)':
+                {'y_max': 10000000,
+                 'y_min': 1099000,
+                 'x_max': 835000,
+                 'x_min': 165000},
+            'Geográfico (GD)':
+                {'y_max': 90,
+                 'y_min': -90,
+                 'x_max': 180,
+                 'x_min': -180},
+            'Geográfico (GMS)':
+                {'y_max': None,
+                 'y_min': None,
+                 'x_max': None,
+                 'x_min': None}
         }
 
         # Interface
         x, y, h = 5, 5, 22
-        self.file_lbl = QLabel('Selecione uma tabela contendo os dados de entrada.', self)
+        self.file_lbl = QLabel('Selecione uma tabela contendo os dados de '
+                               'entrada.', self)
         self.file_lbl.setGeometry(x, y, 310, h)
         self.file_btn = QPushButton('Selecionar', self)
         self.file_btn.setGeometry(x + 310, y, 95, h)
@@ -88,7 +105,9 @@ class XYConverterApp(QMainWindow):
         self.inputCRStype_cbx.setGeometry(x + w1 + 5, y, w2, h)
         self.inputCRStype_cbx.addItems(self.format_options.keys())
         self.inputCRStype_cbx.setCurrentText('Geográfico (GD)')
-        self.inputCRStype_cbx.currentTextChanged.connect(lambda: self.CRS_type_selected('input'))
+        self.inputCRStype_cbx.currentTextChanged.connect(
+            lambda: self.CRS_type_selected('input')
+        )
 
         self.inputCRS_cbx = QComboBox(self)
         self.inputCRS_cbx.setGeometry(x + w1 + 5 + w2 + 5, y, w3, h)
@@ -96,7 +115,10 @@ class XYConverterApp(QMainWindow):
         self.inputCRS_cbx.setCurrentText('SIRGAS 2000')
 
         y, h = y + h + 1, 15
-        self.inputFormatExample_lbl = QLabel('Ex:  ' + self.format_options['Geográfico (GD)']['example'], self)
+        self.inputFormatExample_lbl = QLabel(
+            'Ex:  ' + self.format_options['Geográfico (GD)']['example'],
+            self
+        )
         self.inputFormatExample_lbl.setGeometry(x + w1 + 5 + w2 + 10, y, 100, h)
 
         y, h, w1, w2, w3 = y + h + 5, 22, 85, 120, 190
@@ -107,7 +129,9 @@ class XYConverterApp(QMainWindow):
         self.outputCRStype_cbx.setGeometry(x + w1 + 5, y, w2, h)
         self.outputCRStype_cbx.addItems(self.format_options.keys())
         self.outputCRStype_cbx.setCurrentText('Projetado (UTM)')
-        self.outputCRStype_cbx.currentTextChanged.connect(lambda: self.CRS_type_selected('output'))
+        self.outputCRStype_cbx.currentTextChanged.connect(
+            lambda: self.CRS_type_selected('output')
+        )
 
         self.outputCRS_cbx = QComboBox(self)
         self.outputCRS_cbx.setGeometry(x + w1 + 5 + w2 + 5, y, w3, h)
@@ -115,8 +139,11 @@ class XYConverterApp(QMainWindow):
         self.outputCRS_cbx.setCurrentText('SIRGAS 2000 / UTM zone 22S')
 
         y, h = y + h + 1, 15
-        self.outputFormatExample_lbl = QLabel('Ex:  ' + self.format_options['Projetado (UTM)']['example'], self)
-        self.outputFormatExample_lbl.setGeometry(x + w1 + 5 + w2 + 10, y, 100, h)
+        self.outputFormatExample_lbl = QLabel(
+            'Ex:  ' + self.format_options['Projetado (UTM)']['example'],
+            self
+        )
+        self.outputFormatExample_lbl.setGeometry(x+w1+5+w2+10, y, 100, h)
 
         y = y + h + 5
         self.line2 = QFrame(self)
@@ -134,7 +161,9 @@ class XYConverterApp(QMainWindow):
         self.yColumn_cbx = QComboBox(self)
         self.yColumn_cbx.setGeometry(x + w1 + 5, y, w2, h)
         self.yColumn_cbx.setEnabled(False)
-        self.yColumn_cbx.currentTextChanged.connect(lambda: self.yx_column_selected('y'))
+        self.yColumn_cbx.currentTextChanged.connect(
+            lambda: self.yx_column_selected('y')
+        )
 
         y, h = y + h + 5, 22
         self.xColumn_lbl = QLabel('Longitude:', self)
@@ -144,7 +173,9 @@ class XYConverterApp(QMainWindow):
         self.xColumn_cbx = QComboBox(self)
         self.xColumn_cbx.setGeometry(x + w1 + 5, y, w2, h)
         self.xColumn_cbx.setEnabled(False)
-        self.xColumn_cbx.currentTextChanged.connect(lambda: self.yx_column_selected('x'))
+        self.xColumn_cbx.currentTextChanged.connect(
+            lambda: self.yx_column_selected('x')
+        )
 
         y, h, w = y + h + 10, 250, 370
 
@@ -153,7 +184,9 @@ class XYConverterApp(QMainWindow):
         self.coordinates_tbl.setColumnCount(2)
         self.coordinates_tbl.setColumnWidth(0, 183)
         self.coordinates_tbl.setColumnWidth(1, 183)
-        self.coordinates_tbl.setHorizontalHeaderLabels(self.format_options['Geográfico (GD)']['headings'])
+        self.coordinates_tbl.setHorizontalHeaderLabels(
+            self.format_options['Geográfico (GD)']['headings']
+        )
         self.coordinates_tbl.itemChanged.connect(self.check_table_data)
 
         y2, wh = y, 30
@@ -181,7 +214,8 @@ class XYConverterApp(QMainWindow):
         self.reset_btn = QPushButton('', self)
         self.reset_btn.setGeometry(w + 10, y2, wh, wh)
         self.reset_btn.setIcon(QIcon('icons/refresh.png'))
-        self.reset_btn.setToolTip('Reiniciar a tabela com os dados do arquivo carregado')
+        self.reset_btn.setToolTip('Reiniciar a tabela com os dados do arquivo '
+                                  'carregado')
         self.reset_btn.clicked.connect(self.refresh_table)
         self.reset_btn.setEnabled(False)
 
@@ -192,7 +226,8 @@ class XYConverterApp(QMainWindow):
         self.convert_btn.clicked.connect(self.manage_conversion)
 
         y, h = y + h, 20
-        self.copyrightLabel = QLabel('© 2022 Gabriel Maccari <gabriel.maccari@hotmail.com>', self)
+        self.copyrightLabel = QLabel('© 2022 Gabriel Maccari '
+                                     '<gabriel.maccari@hotmail.com>', self)
         self.copyrightLabel.setGeometry(5, y, 340, h)
         self.copyrightLabel.setFont(QFont('Sans Serif', 8))
 
@@ -201,22 +236,30 @@ class XYConverterApp(QMainWindow):
         self.setMaximumSize(415, y)
 
     def open_file_button_clicked(self):
-        """Exibe um diálogo para seleção de um arquivo (xlsx, xlsm, csv, ods) e cria um DataFrame (
-        XYConverterApp.fileDF) para conter os dados de entrada. Elimina linhas e colunas em branco no DataFrame. """
+        """Exibe um diálogo para seleção de um arquivo (xlsx, xlsm, csv, ods) e
+        cria um DataFrame (XYConverterApp.fileDF) para conter os dados de
+        entrada. Elimina linhas e colunas em branco no DataFrame. """
 
         global file
         self.fileOpened = False
-        # Abre um diálogo para seleção do arquivo. Os formatos suportados são xlsx, xlsm, csv e ods
+        # Abre um diálogo para seleção do arquivo. Os formatos suportados são
+        # xlsx, xlsm, csv e ods
         try:
-            inFile = QFileDialog.getOpenFileName(self, caption='Selecione uma tabela contendo os dados de entrada.',
-                                                 directory=self.folder,
-                                                 filter='Formatos suportados (*.xlsx *.xlsm *.csv *.ods);;Pasta de '
-                                                        'Trabalho do Excel (*.xlsx);;Pasta de Trabalho Habilitada '
-                                                        'para Macro do Excel (*.xlsm);;CSV (*.csv);; OpenDocument '
-                                                        'Spreadsheet (*.ods)')
+            inFile = QFileDialog.getOpenFileName(
+                self,
+                caption='Selecione uma tabela contendo os dados de entrada.',
+                directory=self.folder,
+                filter='Formatos suportados (*.xlsx *.xlsm *.csv *.ods);;'
+                       'Pasta de Trabalho do Excel (*.xlsx);;'
+                       'Pasta de Trabalho Habilitada para Macro do Excel '
+                       '(*.xlsm);;'
+                       'CSV (*.csv);; '
+                       'OpenDocument Spreadsheet (*.ods)')
         # Se não der para abrir o arquivo, mostra uma mensagem com o erro
         except Exception as e:
-            msg = QMessageBox(parent=self, text='Não foi possível abrir o arquivo selecionado.\n\nERRO: %s' % (str(e)))
+            msg = QMessageBox(parent=self,
+                              text=f'Não foi possível abrir o arquivo '
+                                   f'selecionado.\n\nERRO: {str(e)}')
             msg.setWindowTitle('Erro')
             msg.setIcon(QMessageBox.Icon.Critical)
             msg.exec()
@@ -233,38 +276,49 @@ class XYConverterApp(QMainWindow):
                     self.fileOpened = True
                 # Cria um dataframe a partir de um arquivo xlsx, xlsm ou ods
                 else:
-                    # Engine odf para arquivos ods e openpyxl para arquivos do excel
+                    # Engine odf para arquivos ods e openpyxl para arquivos do
+                    # excel
                     eng = ('odf' if path.endswith('.ods') else 'openpyxl')
                     wholeFile = pandas.ExcelFile(path, engine=eng)
                     sheetNames = wholeFile.sheet_names
-                    # Caso o arquivo tenha mais de uma planilha, mostra um diálogo com uma comboBox para selecionar a
-                    # planilha dos dados
+                    # Caso o arquivo tenha mais de uma planilha, mostra um
+                    # diálogo com uma comboBox para selecionar a planilha dos
+                    # dados
                     if len(sheetNames) > 1:
-                        sheet, ok = QInputDialog.getItem(self, 'Selecionar aba', 'Planilha:', sheetNames)
-                        # Se o usuário apertar ok no diálogo, cria o dataframe a partir da planilha selecionada
+                        sheet, ok = QInputDialog.getItem(self,
+                                                         'Selecionar aba',
+                                                         'Planilha:',
+                                                         sheetNames)
+                        # Se o usuário apertar ok no diálogo, cria o dataframe a
+                        # partir da planilha selecionada
                         if ok:
                             file = wholeFile.parse(sheet_name=sheet)
-                        # Caso o usuário aperte em cancelar ou fechar o diálogo, cancela a leitura do arquivo
+                        # Caso o usuário aperte em cancelar ou fechar o diálogo,
+                        # cancela a leitura do arquivo
                         else:
                             return
-                    # Se o arquivo tiver apenas uma planilha, cria o dataframe com ela
+                    # Se o arquivo tiver apenas uma planilha, cria o dataframe
+                    # com ela
                     else:
                         file = pandas.read_excel(path, engine=eng)
 
                     file.columns = file.columns.astype(str)
 
                     # Remove colunas e linhas em branco
-                    remove_cols = [col for col in file.columns if 'Unnamed' in col]
-                    file.drop(remove_cols, axis='columns', inplace=True)
+                    rmv_cols = [col for col in file.columns if 'Unnamed' in col]
+                    file.drop(rmv_cols, axis='columns', inplace=True)
                     file.replace(r'^\s*$', numpy.nan, inplace=True, regex=True)
                     file.dropna(how='all', axis='index', inplace=True)
 
                     self.fileOpened = True
 
-            # Caso ocorra algum erro na leitura do arquivo, exibe uma mensagem com o erro e esvazia as combo boxes
+            # Caso ocorra algum erro na leitura do arquivo, exibe uma mensagem
+            # com o erro e esvazia as combo boxes
             except Exception as e:
                 self.fileOpened = False
-                msg = QMessageBox(parent=self, text='Não foi possível abrir o arquivo.\n\n' + str(e))
+                msg = QMessageBox(parent=self,
+                                  text=f'Não foi possível abrir o arquivo.\n\n'
+                                       f'{str(e)}')
                 msg.setWindowTitle('Erro')
                 msg.setIcon(QMessageBox.Icon.Critical)
                 msg.exec()
@@ -276,7 +330,8 @@ class XYConverterApp(QMainWindow):
                 self.xColumn_cbx.setEnabled(False)
                 self.reset_btn.setEnabled(False)
 
-        # Instruções a serem seguidas quando um arquivo é aberto e o DataFrame é criado com sucesso
+        # Instruções a serem seguidas quando um arquivo é aberto e o DataFrame é
+        # criado com sucesso
         if self.fileOpened:
             self.fileDF = file
             self.file_lbl.setText('Arquivo carregado com sucesso.')
@@ -308,48 +363,63 @@ class XYConverterApp(QMainWindow):
             selected_crs = CRS_cbx.currentText()
 
             # Atualiza as combo boxes de SRC com os SRCs do tipo selecionado
-            crs_dict = self.UTM_CRS_dt if crs_type == 'Projetado (UTM)' else self.geographic_CRS_dt
+            crs_dict = (self.UTM_CRS_dt
+                        if crs_type == 'Projetado (UTM)'
+                        else self.geographic_CRS_dt)
             CRS_cbx.clear()
             CRS_cbx.addItems(sorted(crs_dict.keys()))
             if selected_crs in crs_dict.keys():
                 CRS_cbx.setCurrentText(selected_crs)
 
             # Atualiza os exemplos de formato das coordenadas
-            example_lbl.setText('Ex:  ' + self.format_options[crs_type]['example'])
+            ex = self.format_options[crs_type]['example']
+            example_lbl.setText(f'Ex:  {ex}')
 
             # Atualiza as labels da seleção de colunas
-            self.yColumn_lbl.setText(self.format_options[crs_type]['headings'][0] + ':')
-            self.xColumn_lbl.setText(self.format_options[crs_type]['headings'][1] + ':')
+            y_label = self.format_options[crs_type]['headings'][0] + ':'
+            x_label = self.format_options[crs_type]['headings'][1] + ':'
+            self.yColumn_lbl.setText(y_label)
+            self.xColumn_lbl.setText(x_label)
 
-            # Atualiza os cabeçalhos da tabela com o tipo de coordenada do tipo de SRC selecionado
+            # Atualiza os cabeçalhos da tabela com o tipo de coordenada do tipo
+            # de SRC selecionado
             if in_or_out == 'input':
-                self.coordinates_tbl.setHorizontalHeaderLabels(self.format_options[crs_type]['headings'])
+                headings = self.format_options[crs_type]['headings']
+                self.coordinates_tbl.setHorizontalHeaderLabels(headings)
 
-            # Se houver um arquivo aberto, atualiza as combo boxes de colunas das coordenadas
+            # Se houver um arquivo aberto, atualiza as combo boxes de colunas
+            # das coordenadas
             if self.fileOpened and crs_type:
                 self.update_coordinate_column_boxes()
         except Exception as e:
-            msg = QMessageBox(parent=self, text='Ocorreu um erro ao atualizar a interface.\n\n' + str(e))
+            msg = QMessageBox(parent=self,
+                              text=f'Ocorreu um erro ao atualizar a interface.'
+                                   f'\n\n{str(e)}')
             msg.setWindowTitle('Erro')
             msg.setIcon(QMessageBox.Icon.Critical)
             msg.exec()
 
     def update_coordinate_column_boxes(self):
         try:
-            y_columns, x_columns = self.filter_coordinate_columns(self.fileDF, self.inputCRStype_cbx.currentText())
+            y_columns, x_columns = self.filter_coordinate_columns(
+                self.fileDF,
+                self.inputCRStype_cbx.currentText()
+            )
 
             self.yColumn_cbx.clear()
             self.xColumn_cbx.clear()
             self.yColumn_cbx.addItems(y_columns)
             self.xColumn_cbx.addItems(x_columns)
 
-            # Troca a coluna selecionada na combo box de X para o segundo item da lista (só para não ficar com as 2
-            # combo boxes iguais ao filtrar as colunas)
+            # Troca a coluna selecionada na combo box de X para o segundo item
+            # da lista (só para não ficar com as 2 combo boxes iguais ao filtrar
+            # as colunas)
             if len(x_columns) > 1:
                 self.xColumn_cbx.setCurrentIndex(1)
         except Exception as e:
             msg = QMessageBox(parent=self,
-                              text='Ocorreu um erro ao atualizar os campos de coordenadas na interface.\n\n' + str(e))
+                              text=f'Ocorreu um erro ao atualizar os campos de '
+                                   f'coordenadas na interface.\n\n{str(e)}')
             msg.setWindowTitle('Erro')
             msg.setIcon(QMessageBox.Icon.Critical)
             msg.exec()
@@ -359,17 +429,24 @@ class XYConverterApp(QMainWindow):
             y_columns, x_columns = [], []
 
             if crs_type == 'Geográfico (GMS)':
-                NS_pattern = re.compile('[0-9]{1,2}°[0-9]{1,2}\'[0-9]{1,2},[0-9]{0,20}"[NS]')
-                WE_pattern = re.compile('[0-9]{1,2}°[0-9]{1,2}\'[0-9]{1,2},[0-9]{0,20}"[WEOL]')
+                NS_pattern = re.compile('^(\d{1,2})([°º])'
+                                        '(\d{1,2})([’\'])'
+                                        '(\d{1,2}([.,]\d+)?)(["”])'
+                                        '([NS])$')
+                WE_pattern = re.compile('^(\d{1,2})([°º])'
+                                        '(\d{1,2})([’\'])'
+                                        '(\d{1,2}([.,]\d+)?)(["”])'
+                                        '([EWOL])$')
 
                 for c in DF.columns:
                     rows = DF[c].values
                     N_ok, E_ok = True, True
 
-                    for i in rows:
-                        if NS_pattern.match(str(i)) is None:
+                    for coordinate in rows:
+
+                        if NS_pattern.match(str(coordinate)) is None:
                             N_ok = False
-                        if WE_pattern.match(str(i)) is None:
+                        if WE_pattern.match(str(coordinate)) is None:
                             E_ok = False
 
                     if N_ok: y_columns.append(c)
@@ -378,23 +455,27 @@ class XYConverterApp(QMainWindow):
                 return y_columns, x_columns
 
             else:
-                y_max, y_min, x_max, x_min = self.coordinate_ranges[crs_type]['y_max'], \
-                                             self.coordinate_ranges[crs_type]['y_min'], \
-                                             self.coordinate_ranges[crs_type]['x_max'], \
-                                             self.coordinate_ranges[crs_type]['x_min']
+                y_max = self.coordinate_ranges[crs_type]['y_max']
+                y_min = self.coordinate_ranges[crs_type]['y_min']
+                x_max = self.coordinate_ranges[crs_type]['x_max']
+                x_min = self.coordinate_ranges[crs_type]['x_min']
 
                 for c in DF.columns:
                     try:
                         DF[c] = DF[c].astype(float, errors='raise')
-                        if DF[c].dropna().between(y_min, y_max).all() and not DF[c].dropna().empty:
+                        if (DF[c].dropna().between(y_min, y_max).all()
+                                and not DF[c].dropna().empty):
                             y_columns.append(c)
-                        if DF[c].dropna().between(x_min, x_max).all() and not DF[c].dropna().empty:
+                        if (DF[c].dropna().between(x_min, x_max).all()
+                                and not DF[c].dropna().empty):
                             x_columns.append(c)
                     except:
                         pass
                 return y_columns, x_columns
         except Exception as e:
-            msg = QMessageBox(parent=self, text='Ocorreu um erro ao filtrar os campos de coordenadas.\n\n' + str(e))
+            msg = QMessageBox(parent=self,
+                              text=f'Ocorreu um erro ao filtrar os campos de '
+                                   f'coordenadas.\n\n{str(e)}')
             msg.setWindowTitle('Erro')
             msg.setIcon(QMessageBox.Icon.Critical)
             msg.exec()
@@ -405,7 +486,9 @@ class XYConverterApp(QMainWindow):
 
             column = 0 if axis == 'y' else 1
             column2 = 1 if axis == 'y' else 0
-            field = self.yColumn_cbx.currentText() if axis == 'y' else self.xColumn_cbx.currentText()
+            field = (self.yColumn_cbx.currentText()
+                     if axis == 'y'
+                     else self.xColumn_cbx.currentText())
 
             if field != '':
                 data = self.fileDF[field]
@@ -423,8 +506,11 @@ class XYConverterApp(QMainWindow):
                     value = QTableWidgetItem(None)
                     self.coordinates_tbl.setItem(row, column, value)
 
-                    other_column_item = self.coordinates_tbl.item(row, column2).text()
-                    if other_column_item != '': other_column.append(other_column_item)
+                    other_column_item = self.coordinates_tbl.item(
+                        row, column2
+                    ).text()
+                    if other_column_item != '':
+                        other_column.append(other_column_item)
 
                 if not other_column:
                     self.coordinates_tbl.setRowCount(0)
@@ -434,7 +520,9 @@ class XYConverterApp(QMainWindow):
             self.coordinates_tbl.itemChanged.connect(self.check_table_data)
             self.check_table_data()
         except Exception as e:
-            msg = QMessageBox(parent=self, text='Ocorreu um erro ao atualizar a tabela.\n\n' + str(e))
+            msg = QMessageBox(parent=self,
+                              text=f'Ocorreu um erro ao atualizar a tabela.'
+                                   f'\n\n{str(e)}')
             msg.setWindowTitle('Erro')
             msg.setIcon(QMessageBox.Icon.Critical)
             msg.exec()
@@ -491,7 +579,8 @@ class XYConverterApp(QMainWindow):
                     try:
                         coordinate = item.text()
                         if coordinate != None:
-                            if crs_type == 'Projetado (UTM)' or crs_type == 'Geográfico (GD)':
+                            if (crs_type == 'Projetado (UTM)'
+                                    or crs_type == 'Geográfico (GD)'):
                                 coordinate = coordinate.replace(',', '.')
                             elif crs_type == 'Geográfico (GMS)':
                                 coordinate = coordinate.replace('.', ',')
@@ -505,7 +594,9 @@ class XYConverterApp(QMainWindow):
             return DF
 
         except Exception as e:
-            msg = QMessageBox(parent=self, text='Ocorreu um erro ao recuperar os dados da tabela.\n\n' + str(e))
+            msg = QMessageBox(parent=self,
+                              text=f'Ocorreu um erro ao recuperar os dados da '
+                                   f'tabela.\n\n{str(e)}')
             msg.setWindowTitle('Erro')
             msg.setIcon(QMessageBox.Icon.Critical)
             msg.exec()
@@ -521,10 +612,14 @@ class XYConverterApp(QMainWindow):
             crs_type = self.inputCRStype_cbx.currentText()
 
             # Seleciona no DataFrame as colunas adequadas para coordenadas
-            y_columns, x_columns = self.filter_coordinate_columns(self.interfaceDF, crs_type)
+            y_columns, x_columns = self.filter_coordinate_columns(
+                self.interfaceDF, crs_type
+            )
 
             # Checa se as colunas são válidas para coordenadas
-            columns_ok = True if (fields[0] in y_columns and fields[1] in x_columns) else False
+            columns_ok = (True
+                          if (fields[0] in y_columns and fields[1] in x_columns)
+                          else False)
 
             # Checa se as colunas possuem o mesmo número de linhas não-nulas
             rows_ok = True if (
@@ -535,7 +630,9 @@ class XYConverterApp(QMainWindow):
             self.convert_btn.setEnabled(columns_ok and rows_ok)
 
         except Exception as e:
-            msg = QMessageBox(parent=self, text='Ocorreu um erro ao checar os dados da tabela.\n\n' + str(e))
+            msg = QMessageBox(parent=self,
+                              text=f'Ocorreu um erro ao checar os dados da '
+                                   f'tabela.\n\n{str(e)}')
             msg.setWindowTitle('Erro')
             msg.setIcon(QMessageBox.Icon.Critical)
             msg.exec()
@@ -549,72 +646,113 @@ class XYConverterApp(QMainWindow):
         output_CRS = self.outputCRS_cbx.currentText()
 
         try:
-            input_EPSG = self.geographic_CRS_dt[input_CRS] if input_CRS_type.startswith('Geográfico') else \
-                self.UTM_CRS_dt[input_CRS]
-            output_EPSG = self.geographic_CRS_dt[output_CRS] if output_CRS_type.startswith('Geográfico') else \
-                self.UTM_CRS_dt[output_CRS]
+            input_EPSG = (self.geographic_CRS_dt[input_CRS]
+                          if input_CRS_type.startswith('Geográfico')
+                          else self.UTM_CRS_dt[input_CRS])
+            output_EPSG = (self.geographic_CRS_dt[output_CRS]
+                           if output_CRS_type.startswith('Geográfico')
+                           else self.UTM_CRS_dt[output_CRS])
 
             fields = self.interfaceDF.columns.to_list()
             input_y = self.interfaceDF[fields[0]].values
             input_x = self.interfaceDF[fields[1]].values
 
-            if input_CRS_type == 'Projetado (UTM)' and output_CRS_type == 'Geográfico (GD)':
-                self.output_y, self.output_x = self.convert_coordinates(input_y, input_x, input_EPSG, output_EPSG,
-                                                                        input_CRS_type, output_CRS_type)
+            if (input_CRS_type == 'Projetado (UTM)'
+                    and output_CRS_type == 'Geográfico (GD)'):
+                self.output_y, self.output_x = self.convert_coordinates(
+                    input_y, input_x,
+                    input_EPSG, output_EPSG,
+                    input_CRS_type, output_CRS_type
+                )
 
-            elif input_CRS_type == 'Projetado (UTM)' and output_CRS_type == 'Geográfico (GMS)':
-                output_y_DD, output_x_DD = self.convert_coordinates(input_y, input_x, input_EPSG, output_EPSG,
-                                                                    input_CRS_type, 'Geográfico (GD)')
+            elif (input_CRS_type == 'Projetado (UTM)'
+                    and output_CRS_type == 'Geográfico (GMS)'):
+                output_y_DD, output_x_DD = self.convert_coordinates(
+                    input_y, input_x,
+                    input_EPSG, output_EPSG,
+                    input_CRS_type, 'Geográfico (GD)'
+                )
                 self.output_y = self.reformat_DD_to_DMS(output_y_DD, 'y')
                 self.output_x = self.reformat_DD_to_DMS(output_x_DD, 'x')
 
-            elif input_CRS_type == 'Projetado (UTM)' and output_CRS_type == 'Projetado (UTM)':
-                self.output_y, self.output_x = self.convert_coordinates(input_y, input_x, input_EPSG, output_EPSG,
-                                                                        input_CRS_type, output_CRS_type)
+            elif (input_CRS_type == 'Projetado (UTM)'
+                    and output_CRS_type == 'Projetado (UTM)'):
+                self.output_y, self.output_x = self.convert_coordinates(
+                    input_y, input_x,
+                    input_EPSG, output_EPSG,
+                    input_CRS_type, output_CRS_type
+                )
 
-            elif input_CRS_type == 'Geográfico (GD)' and output_CRS_type == 'Geográfico (GMS)':
-                output_y_DD, output_x_DD = self.convert_coordinates(input_y, input_x, input_EPSG, output_EPSG,
-                                                                    input_CRS_type, 'Geográfico (GD)')
+            elif (input_CRS_type == 'Geográfico (GD)'
+                    and output_CRS_type == 'Geográfico (GMS)'):
+                output_y_DD, output_x_DD = self.convert_coordinates(
+                    input_y, input_x,
+                    input_EPSG, output_EPSG,
+                    input_CRS_type, 'Geográfico (GD)'
+                )
                 self.output_y = self.reformat_DD_to_DMS(output_y_DD, 'y')
                 self.output_x = self.reformat_DD_to_DMS(output_x_DD, 'x')
 
-            elif input_CRS_type == 'Geográfico (GD)' and output_CRS_type == 'Projetado (UTM)':
-                self.output_y, self.output_x = self.convert_coordinates(input_y, input_x, input_EPSG, output_EPSG,
-                                                                        input_CRS_type, output_CRS_type)
+            elif (input_CRS_type == 'Geográfico (GD)'
+                    and output_CRS_type == 'Projetado (UTM)'):
+                self.output_y, self.output_x = self.convert_coordinates(
+                    input_y, input_x,
+                    input_EPSG, output_EPSG,
+                    input_CRS_type, output_CRS_type
+                )
 
-            elif input_CRS_type == 'Geográfico (GD)' and output_CRS_type == 'Projetado (GD)':
-                self.output_y, self.output_x = self.convert_coordinates(input_y, input_x, input_EPSG, output_EPSG,
-                                                                        input_CRS_type, output_CRS_type)
+            elif (input_CRS_type == 'Geográfico (GD)'
+                    and output_CRS_type == 'Projetado (GD)'):
+                self.output_y, self.output_x = self.convert_coordinates(
+                    input_y, input_x,
+                    input_EPSG, output_EPSG,
+                    input_CRS_type, output_CRS_type
+                )
 
-            elif input_CRS_type == 'Geográfico (GMS)' and output_CRS_type == 'Geográfico (GD)':
+            elif (input_CRS_type == 'Geográfico (GMS)'
+                    and output_CRS_type == 'Geográfico (GD)'):
                 input_y_DD = self.reformat_DMS_to_DD(input_y)
                 input_x_DD = self.reformat_DMS_to_DD(input_x)
-                self.output_y, self.output_x = self.convert_coordinates(input_y_DD, input_x_DD, input_EPSG, output_EPSG,
-                                                                        'Geográfico (GD)', output_CRS_type)
+                self.output_y, self.output_x = self.convert_coordinates(
+                    input_y_DD, input_x_DD,
+                    input_EPSG, output_EPSG,
+                    'Geográfico (GD)', output_CRS_type
+                )
 
-            elif input_CRS_type == 'Geográfico (GMS)' and output_CRS_type == 'Projetado (UTM)':
+            elif (input_CRS_type == 'Geográfico (GMS)'
+                    and output_CRS_type == 'Projetado (UTM)'):
                 input_y_DD = self.reformat_DMS_to_DD(input_y)
                 input_x_DD = self.reformat_DMS_to_DD(input_x)
-                self.output_y, self.output_x = self.convert_coordinates(input_y_DD, input_x_DD, input_EPSG, output_EPSG,
-                                                                        'Geográfico (GD)', output_CRS_type)
+                self.output_y, self.output_x = self.convert_coordinates(
+                    input_y_DD, input_x_DD,
+                    input_EPSG, output_EPSG,
+                    'Geográfico (GD)', output_CRS_type
+                )
 
-            elif input_CRS_type == 'Geográfico (GMS)' and output_CRS_type == 'Geográfico (GMS)':
+            elif (input_CRS_type == 'Geográfico (GMS)'
+                    and output_CRS_type == 'Geográfico (GMS)'):
                 input_y_DD = self.reformat_DMS_to_DD(input_y)
                 input_x_DD = self.reformat_DMS_to_DD(input_x)
-                output_y_DD, output_x_DD = self.convert_coordinates(input_y_DD, input_x_DD, input_EPSG, output_EPSG,
-                                                                    'Geográfico (GD)', 'Geográfico (GD)')
+                output_y_DD, output_x_DD = self.convert_coordinates(
+                    input_y_DD, input_x_DD,
+                    input_EPSG, output_EPSG,
+                    'Geográfico (GD)', 'Geográfico (GD)'
+                )
                 self.output_y = self.reformat_DD_to_DMS(output_y_DD, 'y')
                 self.output_x = self.reformat_DD_to_DMS(output_x_DD, 'x')
 
         except Exception as e:
-            msg = QMessageBox(parent=self, text='Ocorreu um erro durante a conversão.\n\n' + str(e))
+            msg = QMessageBox(parent=self,
+                              text=f'Ocorreu um erro durante a conversão.'
+                                   f'\n\n{str(e)}')
             msg.setWindowTitle('Erro')
             msg.setIcon(QMessageBox.Icon.Critical)
             msg.exec()
 
         self.export_results(output_CRS_type)
 
-    def convert_coordinates(self, input_y, input_x, input_EPSG, output_EPSG, input_CRS_type, output_CRS_type):
+    def convert_coordinates(self, input_y, input_x, input_EPSG, output_EPSG,
+                            input_CRS_type, output_CRS_type):
 
         if len(input_y) == len(input_x):
             n = len(input_y)
@@ -628,13 +766,17 @@ class XYConverterApp(QMainWindow):
         for i in range(0, n):
             a, b = input_y[i], input_x[i]
 
-            if input_CRS_type == 'Projetado (UTM)' and output_CRS_type == 'Geográfico (GD)':
+            if (input_CRS_type == 'Projetado (UTM)'
+                    and output_CRS_type == 'Geográfico (GD)'):
                 y, x = transformer.transform(b, a)
-            elif input_CRS_type == 'Projetado (UTM)' and output_CRS_type == 'Projetado (UTM)':
+            elif (input_CRS_type == 'Projetado (UTM)'
+                    and output_CRS_type == 'Projetado (UTM)'):
                 x, y = transformer.transform(b, a)
-            elif input_CRS_type == 'Geográfico (GD)' and output_CRS_type == 'Projetado (UTM)':
+            elif (input_CRS_type == 'Geográfico (GD)'
+                    and output_CRS_type == 'Projetado (UTM)'):
                 x, y = transformer.transform(a, b)
-            elif input_CRS_type == 'Geográfico (GD)' and output_CRS_type == 'Geográfico (GD)':
+            elif (input_CRS_type == 'Geográfico (GD)'
+                    and output_CRS_type == 'Geográfico (GD)'):
                 y, x = transformer.transform(a, b)
 
             output_y.append(y)
@@ -658,7 +800,9 @@ class XYConverterApp(QMainWindow):
 
             mnt, sec = divmod(abs(i) * 3600, 60)
             deg, mnt = divmod(mnt, 60)
-            DMS = ('%02.0f°%02.0f\'%07.4f\"%s' % (deg, mnt, sec, pole)).replace('.', ',')
+            DMS = (
+                    '%02.0f°%02.0f\'%07.4f\"%s' % (deg, mnt, sec, pole)
+            ).replace('.', ',')
             DMS_coordinates.append(DMS)
 
         return DMS_coordinates
@@ -667,8 +811,9 @@ class XYConverterApp(QMainWindow):
         DD_coordinates = []
         for i in DMS_coordinates:
             coordinate = i.replace(',', '.')
-            deg, mnt, sec, suffix = re.split('[°\'"]', coordinate)
-            DD = (float(deg) + float(mnt) / 60 + float(sec) / (60 * 60)) * (-1 if suffix in ['W', 'O', 'S'] else 1)
+            deg, mnt, sec, suffix = re.split('[°º\'’"”]', coordinate)
+            DD = ((float(deg) + float(mnt) / 60 + float(sec) / (60 * 60)) *
+                  (-1 if suffix in ['W', 'O', 'S'] else 1))
             DD_coordinates.append(DD)
 
         return DD_coordinates
@@ -683,8 +828,10 @@ class XYConverterApp(QMainWindow):
                 DF['Latitude'] = self.output_y
                 DF['Longitude'] = self.output_x
 
-            output_file = QFileDialog.getSaveFileName(self, caption='Salvar arquivo', directory=self.folder,
-                                                      filter='Pasta de trabalho do excel (*.xlsx);;Texto separado por delimitador (*.csv)')
+            output_file = QFileDialog.getSaveFileName(
+                self, caption='Salvar arquivo', directory=self.folder,
+                filter='Pasta de trabalho do excel (*.xlsx);;'
+                       'Texto separado por delimitador (*.csv)')
             filePath = output_file[0]
             if filePath != '':
                 if filePath.endswith('.csv'):
@@ -692,11 +839,14 @@ class XYConverterApp(QMainWindow):
                 else:
                     DF.to_excel(filePath, index=True, engine='openpyxl')
 
-                msg = QMessageBox(parent=self, text='Arquivo salvo com sucesso!')
+                msg = QMessageBox(parent=self,
+                                  text='Arquivo salvo com sucesso!')
                 msg.setWindowTitle('Sucesso')
                 msg.exec()
         except Exception as e:
-            msg = QMessageBox(parent=self, text='Ocorreu um erro ao exportar os resultados.\n\n' + str(e))
+            msg = QMessageBox(parent=self,
+                              text=f'Ocorreu um erro ao exportar os resultados.'
+                                   f'\n\n{str(e)}')
             msg.setWindowTitle('Erro')
             msg.setIcon(QMessageBox.Icon.Critical)
             msg.exec()
