@@ -1,3 +1,0 @@
-Virtual environment: xygeo (C:\Users\gabri\Documents\Python Virtual Environments\xygeo\Scripts\activate)
-
-pyinstaller "C:\Users\gabri\OneDrive\LabMap\xyGeo\xy-geo-rep\xyGeoApp.py" --distpath="C:\Users\gabri\OneDrive\LabMap\xyGeo" --upx-dir="C:\Users\gabri\OneDrive\LabMap\lib\upx-3.96-win64" --clean --onefile --noconsole --icon="C:\Users\gabri\OneDrive\LabMap\xyGeo\xy-geo-rep\icons\globe.ico"

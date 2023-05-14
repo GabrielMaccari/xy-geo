@@ -1,9 +1,0 @@
-INSTRUÇÕES DE USO
-1. Selecione uma tabela .xlsx contendo pares de coordenadas geográficas ou UTM, dispostas em duas colunas distintas.
-2. Selecione o formato e sistema de referência de coordenadas (SRC) de entrada das coordenadas (UTM, graus decimais ou graus, minutos e segundos).
-3. Selecione o formato e SRC de saída desejados para as coordenadas.
-4. Selecione as colunas que contêm as coordenadas a serem convertidas. Verifique na tela se as colunas selecionadas são as corretas e se não estão invertidas.
-Caso as colunas desejadas não aparecerem como opções na interface, verifique no arquivo de origem se elas estão no formato correto (veja o exemplo localizado abaixo do SRC de entrada na interface do aplicativo) e se não há dados inválidos na coluna.
-5. Clique em "Converter" e selecione o local de exportação do arquivo.
-Caso o botão de conversão esteja travado, verifique na tabela da interface se não há nenhum dado nulo (nan) e se as coordenadas inseridas estão no formato correto (veja o exemplo localizado abaixo do SRC de entrada na interface do aplicativo).
-6. As coordenadas convertidas são exportadas para uma nova tabela, e são mantidas na mesma ordem do arquivo original.

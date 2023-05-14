@@ -1,0 +1,36 @@
+QMainWindow {
+    background-color: white;
+}
+QLabel {
+    background-color: none;
+    font-family: SegoeUI;
+    font-size: 8.5pt;
+    font-color: #1E1F22;
+}
+QCheckBox {
+    background-color: none;
+    font-family: SegoeUI;
+    font-size: 8.5pt;
+    font-color: #1E1F22;
+}
+QComboBox {
+    font-family: SegoeUI;
+    font-size: 8.5pt;
+    font-color: #1E1F22;
+}
+QPushButton {
+    font-family: SegoeUI;
+    font-size: 9pt;
+    color: white;
+    background-color: #1B5FAC;
+}
+QPushButton:hover {
+    background-color: #326fb4;
+}
+QPushButton:disabled {
+    background-color: #A1A1A1;
+}
+QToolButton {
+    background-color: none;
+    border-style: none;
+}
