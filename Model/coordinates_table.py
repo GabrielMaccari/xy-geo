@@ -11,5 +11,6 @@ class CoordinatesTable:
         self.y_column = y_column
         self.x_column = x_column
 
+        # Esses atributos não estão sendo usados por enquanto
         self.crs = crs
         self.crs_type = crs_type

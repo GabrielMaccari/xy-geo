@@ -77,7 +77,10 @@ class UIController(AppMainWindow):
             # Abre uma janela de seleção de arquivo
             path = show_file_dialog(
                 caption="Selecione uma tabela contendo os dados de entrada.",
-                extension_filter="Planilhas (*.xlsx *.xlsm *.csv *.ods)",
+                extension_filter=("Pasta de trabalho do Excel (*.xlsx);;"
+                                  "Pasta de trabalho habilitada para macro do Excel (*.xlsm);;"
+                                  "Open Document Spreadsheet (*.ods);;"
+                                  "CSV (*.csv)"),
                 mode="open", parent=self
             )
 
@@ -110,7 +113,7 @@ class UIController(AppMainWindow):
             self.coord_format_selected("input")
 
         except Exception as exception:
-            show_popup(f"ERRO: {exception}", "error")
+            show_popup(f"ERRO: {exception}", "error", self)
 
     def coord_format_selected(self, input_or_output: str):
         try:
@@ -141,7 +144,7 @@ class UIController(AppMainWindow):
                 for f in ["labels","x","y"]:
                     self.field_selected(f)
         except Exception as exception:
-            show_popup(f"ERRO: {exception}", "error")
+            show_popup(f"ERRO: {exception}", "error", self)
 
     def field_selected(self, field: str):
         try:
@@ -174,7 +177,7 @@ class UIController(AppMainWindow):
 
             self.enable_widgets(["reproject"], self.columns_ok[0] and self.columns_ok[1])
         except Exception as exception:
-            show_popup(f"ERRO: {exception}", "error")
+            show_popup(f"ERRO: {exception}", "error", self)
 
     def reproject_button_clicked(self):
         try:
@@ -189,17 +192,22 @@ class UIController(AppMainWindow):
             self.op_controller.manage_conversion(input_format, output_format, input_crs_key, output_crs_key,
                                                  label_field, y_field, x_field)
 
-            save_path = show_file_dialog("Salvar tabela", "Planilhas (*.xlsx *.xlsm *.csv *.ods)", "save", self)
+            save_path = show_file_dialog(caption="Salvar tabela",
+                                         extension_filter=("Pasta de trabalho do Excel (*.xlsx);;"
+                                                           "Pasta de trabalho habilitada para macro do Excel (*.xlsm);;"
+                                                           "Open Document Spreadsheet (*.ods);;"
+                                                           "CSV (*.csv)"),
+                                         mode="save", parent=self)
 
             if save_path == "":
                 return
 
             self.op_controller.save_file(save_path)
 
-            show_popup("Arquivo salvo com sucesso!")
+            show_popup("Arquivo salvo com sucesso!", parent=self)
 
         except Exception as exception:
-            show_popup(f"ERRO: {exception}", "error")
+            show_popup(f"ERRO: {exception}", "error", self)
 
     def select_probable_coord_columns(self):
         probable_x_column = self.op_controller.select_coord_column("x")
@@ -208,21 +216,22 @@ class UIController(AppMainWindow):
         self.y_field_combo.setCurrentText(probable_y_column)
 
 
-def show_popup(message: str, msg_type: str = "notification"):
+def show_popup(message: str, msg_type: str = "notification", parent: QMainWindow = None):
     """
     Exibe uma mensagem em popup.
     :param message: Conteúdo da popup.
     :param msg_type: "notification" ou "error". Define o ícone a ser exibido.
+    :param parent: A janela pai.
     :return: Nada.
     """
     popup_types = {
-        "notification": {"title": "Notificação", "icon": "icons/globe.png"},
+        "notification": {"title": "Notificação", "icon": "icons/info.png"},
         "error":        {"title": "Erro",        "icon": "icons/error.png"}
     }
     title = popup_types[msg_type]["title"]
     icon = QIcon(popup_types[msg_type]["icon"])
 
-    popup = QMessageBox()
+    popup = QMessageBox(parent)
     popup.setText(message)
     popup.setWindowTitle(title)
     popup.setWindowIcon(icon)

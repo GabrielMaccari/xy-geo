@@ -63,7 +63,7 @@ class OperationsController:
 
         return True
 
-    def create_model_instance(self, df, io = "input"):
+    def create_model_instance(self, df, io="input"):
         if io == "input":
             self.input_table = None
             self.input_table = self.table_class(df)
@@ -81,7 +81,7 @@ class OperationsController:
         elif axis == "x":
             common_names = ("longitude", "lon", "easting", "utm_e", "utme", "e", "x", "utme (m)")
         else:
-            raise Exception('Expected "y" or "x" for axis')
+            raise KeyError('Expected "y" or "x" for axis')
 
         for col in options:
             if str(col).lower() in common_names:
@@ -240,7 +240,7 @@ class OperationsController:
                 elif input_format == "UTM" and output_format == "UTM":
                     new_x, new_y = transformer.transform(old_x, old_y)
                 else:
-                    raise Exception("Unknown input/output combination for reprojection")
+                    raise KeyError("Unknown input/output combination for reprojection")
 
                 if new_x == numpy.inf or new_y == numpy.inf:
                     raise TypeError(f"Invalid coordinate output (X: {new_x} / Y: {new_y})")
