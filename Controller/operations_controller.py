@@ -95,17 +95,18 @@ class OperationsController:
         y_columns, x_columns = [], []
 
         if coord_format == "GMS":
-            y_pattern = re.compile(r"^(\d{1,2})([°º])(\d{1,2})(['’])(\d{1,2}([.,]\d+)?)([\"”])([NS])$")
-            x_pattern = re.compile(r"^(\d{1,3})([°º])(\d{1,2})(['’])(\d{1,2}([.,]\d+)?)([\"”])([EWOL])$")
+            y_pattern = re.compile(r"^(\d{1,2})([°º])(\d{1,2})(['’′])(\d{1,2}([.,]\d+)?)([\"”″])([NSns])$")
+            x_pattern = re.compile(r"^(\d{1,3})([°º])(\d{1,2})(['’′])(\d{1,2}([.,]\d+)?)([\"”″])([EWOLewol])$")
 
             for c in df.columns:
                 rows = df[c].values
                 y_ok, x_ok = True, True
 
                 for value in rows:
-                    if y_pattern.match(str(value)) is None:
+                    value = str(value).replace(" ", "")
+                    if y_pattern.match(value) is None:
                         y_ok = False
-                    if x_pattern.match(str(value)) is None:
+                    if x_pattern.match(value) is None:
                         x_ok = False
 
                     if not y_ok and not x_ok:
@@ -187,7 +188,7 @@ class OperationsController:
 
         # Caso as coordenadas de entrada estejam em GMS, converte elas para DD
         if input_format == "GMS":
-            input_df[y_field], input_df[x_field] = self.reformat_dms_to_dd(input_df[y_field], input_df[x_field])
+            input_df[y_field], input_df[x_field] = self.reformat_DMS_to_DD(input_df[y_field], input_df[x_field])
 
         # Reprojeta as coordenadas entre SRCs
         output_df[y_col], output_df[x_col] = self.reproject(input_df[y_field], input_df[x_field],
@@ -207,10 +208,10 @@ class OperationsController:
         self.output_table.x_column = x_col
         self.output_table.y_column = y_col
 
-    def reformat_dms_to_dd(self, y, x):
-        def dms_to_decimal(dms):
-            parts = re.split(r"°|º|'|’|\"|”", dms)
-            d, m, s = int(parts[0]), int(parts[1]), float(parts[2].replace(",","."))
+    def reformat_DMS_to_DD(self, y, x):
+        def DMS_to_DD(dms):
+            parts = re.split(r"°|º|'|’|′|\"|”|″", dms)
+            d, m, s = int(parts[0]), int(parts[1]), float(parts[2].replace(",", "."))
             direction = parts[3]
 
             dd = d + (m / 60) + (s / 3600)
@@ -220,8 +221,8 @@ class OperationsController:
 
             return dd
 
-        y_dd = y.apply(dms_to_decimal)
-        x_dd = x.apply(dms_to_decimal)
+        y_dd = y.apply(DMS_to_DD)
+        x_dd = x.apply(DMS_to_DD)
 
         return y_dd, x_dd
 
@@ -255,7 +256,7 @@ class OperationsController:
         return output_y, output_x
 
     def reformat_DD_to_DMS(self, y, x):
-        def decimal_to_dms(dd, axis="y"):
+        def DD_to_DMS(dd, axis="y"):
             d = int(abs(dd))
             md = (abs(dd) - d) * 60
             m = int(md)
@@ -265,10 +266,10 @@ class OperationsController:
             else:
                 direction = "S" if axis == "y" else "W"
 
-            return f"{d:0>2}°{m:0>2}'{s:07.4f}\"{direction}".replace(".",",")
+            return f"{d:0>2}°{m:0>2}′{s:07.4f}″{direction}".replace(".", ",")
 
-        y_dms = y.apply(decimal_to_dms, axis="y")
-        x_dms = x.apply(decimal_to_dms, axis="x")
+        y_dms = y.apply(DD_to_DMS, axis="y")
+        x_dms = x.apply(DD_to_DMS, axis="x")
 
         return y_dms, x_dms
 

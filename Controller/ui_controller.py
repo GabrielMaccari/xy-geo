@@ -77,7 +77,8 @@ class UIController(AppMainWindow):
             # Abre uma janela de seleção de arquivo
             path = show_file_dialog(
                 caption="Selecione uma tabela contendo os dados de entrada.",
-                extension_filter=("Pasta de trabalho do Excel (*.xlsx);;"
+                extension_filter=("Arquivos suportados (*.xlsx *.xlsm *.csv *.ods);;"
+                                  "Pasta de trabalho do Excel (*.xlsx);;"
                                   "Pasta de trabalho habilitada para macro do Excel (*.xlsm);;"
                                   "Open Document Spreadsheet (*.ods);;"
                                   "CSV (*.csv)"),
@@ -193,7 +194,8 @@ class UIController(AppMainWindow):
                                                  label_field, y_field, x_field)
 
             save_path = show_file_dialog(caption="Salvar tabela",
-                                         extension_filter=("Pasta de trabalho do Excel (*.xlsx);;"
+                                         extension_filter=("Arquivos suportados (*.xlsx *.xlsm *.csv *.ods);;"
+                                                           "Pasta de trabalho do Excel (*.xlsx);;"
                                                            "Pasta de trabalho habilitada para macro do Excel (*.xlsm);;"
                                                            "Open Document Spreadsheet (*.ods);;"
                                                            "CSV (*.csv)"),

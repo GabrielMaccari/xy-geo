@@ -1,1 +1,1 @@
-pyinstaller "app.py" --distpath="release" --upx-dir="..\upx-3.96-win64" --clean --onefile --noconsole --icon="icons\globe.ico"
+pyinstaller "app.py" --distpath="release" --upx-dir="..\upx-4.2.0-win64" --clean --onefile --noconsole --icon="icons\globe.ico"
