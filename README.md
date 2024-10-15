@@ -7,6 +7,9 @@
   <p>
 </div>
 
+> [!NOTE]
+> As funcionalidades presentes neste software foram transferidas para o [table2spatial](https://github.com/GabrielMaccari/table2spatial), e o xyGeo não receberá mais atualizações e correções de bugs.
+
 ## Interface
 ![interface](https://github.com/FrostPredator/xy-geo/assets/114439033/f5ad6e33-9c58-4764-883c-05329f553cb7)
 
